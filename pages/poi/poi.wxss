@@ -1,0 +1,23 @@
+/* pages/poi/poi.wxss */
+.bottom-location{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 6rpx 20rpx 20rpx;
+  border-bottom: 1rpx solid gray;
+}
+.locationName{
+  padding-left: 10rpx; 
+  font-size: 30rpx;
+}
+.bottom-text{
+  width: 80%;
+  margin-top: 20rpx;
+  height: 150rpx;
+  background: #ccc;
+  border-radius: 10rpx;
+  padding:10rpx;
+}
+.locationImg{
+  width: 60rpx;
+  height: 60rpx;
+}
