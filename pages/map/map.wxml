@@ -21,7 +21,7 @@
       <cover-view bindtap="tapMap" class='search'>查找地点、路线</cover-view>
     </cover-view>
     <!--设置头像 代替control-->
-    <cover-view class='headimg'  style='height:{{headimgHeight}}rpx;width:{{headimgWidth}}rpx' bindtap="getWayName">
+    <cover-view class='headimg'  style='height:{{headimgHeight}}rpx;width:{{headimgWidth}}rpx' bindtap="getCenterLocation">
       <cover-image src="{{headImg}}"></cover-image>
     </cover-view>
     <!--回到所在位置-->
