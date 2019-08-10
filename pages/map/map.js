@@ -191,17 +191,24 @@ Page({
         this.setData({
           address: res[0].regeocodeData.formatted_address
         })
+        that.getWeather()
       }
     })
-    // myAmapFun.getWeather({
-    //   success: function (data) {
-    //     console.log(data)
-    //   },
-    //   fail: function (info) {
-    //     //失败回调
-    //     console.log(info)
-    //   }
-    // })
+  },
+  /**
+   * 获取天气
+   */
+  getWeather(){
+    var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
+    myAmapFun.getWeather({
+      success: function (data) {
+        console.log(data)
+      },
+      fail: function (info) {
+        //失败回调
+        console.log(info)
+      }
+    })
   },
   /**
    * 获取页面高低
@@ -229,6 +236,9 @@ Page({
       sourceType: ['album', 'camera'],
       success(res){
         console.log(res.tempFiles)
+        if (that.data.imgsArray.length>=3){
+          that.data.imgsArray.shift()
+        }
         that.data.imgsArray.push(res.tempFiles)
         that.setData({
           imgsArray: that.data.imgsArray
@@ -281,10 +291,19 @@ Page({
       },
       success(data){
         console.log(data)
+        app.globalData.poiList = data.data.regeocode.pois
         that.setData({
           regeocode: data.data.regeocode
         })
       }
+    })
+  },
+  /**
+   * 打开poi列表
+   */
+  toPoi(){
+    wx.navigateTo({
+      url:'../poi/poi'
     })
   },
 

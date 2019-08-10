@@ -117,3 +117,7 @@ page,.map-content{
 .imgBox{
   display: flex;
 }
+.imgBox image{
+  height: 240rpx;
+  margin:20rpx 1.5%;
+}

@@ -45,7 +45,7 @@
       <text class='cancle button-common'>取消</text>
       <text class='sure button-common'>发布</text>
     </view>
-    <view class="bottom-location">
+    <view class="bottom-location" bindtap="toPoi">
       <image src="../../img/filedicon_location_.png" class='locationImg'></image>
       <text class='locationName'>{{regeocode.formatted_address}}</text>
     </view>

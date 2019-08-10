@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/map/map",
-    "pages/way/way"
+    "pages/way/way",
+    "pages/poi/poi"
   ],
   "permission": {
     "scope.userLocation": {
