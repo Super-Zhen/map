@@ -13,12 +13,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    console.log(options.id)
   },
   /**
  * 选中目标地点之后返回地图页面
  */
-  backtoMap(){
+  backtoMap(e){
+    console.log(e.currentTarget.dataset)
+    app.globalData.formatted_address = e.currentTarget.dataset.licationname
     wx.navigateBack({
       delta: 1
     })
@@ -35,7 +37,9 @@ Page({
    */
   onShow: function () {
     this.setData({
-      poiList: app.globalData.poiList
+      poiList: app.globalData.poiList.filter(item=>{
+        return Array.isArray(item.address)!==true
+      })
     })
   },
 

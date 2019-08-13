@@ -3,12 +3,12 @@ const app = getApp()
 const amapWX = require('../../common/amap-wx.js')
 const MapAk = require('../../common/mapKey.js')
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
     winHeight:'', // 页面高度
+    WINHEIGHT:'', // 页面高度常量
     winWidth:'',  // 页面宽度
     latitude:'39.90469000000001', // 经度
     longitude:' 116.40717000000001',   // 纬度
@@ -17,11 +17,14 @@ Page({
     headImg: "../../img/centerPoint.png", // 设置固定点的图片
     isShow:true, // 头像是否显示
     markers:[],
-    headimgHeight:80,
-    headimgWidth: 50,
+    headimgHeight:80, // 设置中间点control高度
+    headimgWidth: 50, // 设置中间点control宽度
     markArray:[],
     regeocode:'',
-    imgsArray:[]
+    imgsArray:[], // 设置图片数组
+    focus:false,
+    photo:'../../img/centerPoint.png',
+    weather:' '
   },
   /**
    * 生命周期函数--监听页面加载
@@ -30,10 +33,13 @@ Page({
     let that = this
     console.log('onLoad')
     that.checkSetting()
+    that.getScreenHeight()
     that.mapCtx = wx.createMapContext('myMap')
     setTimeout(function () {
       that.mapCtx.moveToLocation()
-    }, 1000)
+    }, 1000),
+    that.getPhoto(),
+    that.getWeather()
   },
   /**
    * 判断用户是否进行了地址访问授权
@@ -60,7 +66,7 @@ Page({
                    success(ressss){
                      if (ressss.authSetting['scope.userLocation']) {
                       //  console.log('初始化地图')
-                       that.getScreenHeight()
+                      //  that.getScreenHeight()
                      }else{
                        console.log('用户未同意授权')
                      }
@@ -71,7 +77,7 @@ Page({
             }
           })
         }else{
-          that.getScreenHeight()
+          // that.getScreenHeight()
         }
       },
       fali(e){
@@ -84,19 +90,19 @@ Page({
   /**
    * 设置controls
    */
-  setControls(){
+  getPhoto(){
     let that = this
     wx.downloadFile({
       url: app.globalData.userInfo.avatarUrl,
       success(res) {
         that.setData({
-          headImg:res.tempFilePath
+          photo:res.tempFilePath
         })
       }
     })
   },
   /**
-   * 获取点击的点
+   * 点击中心位置图标获取周围建筑道路名称
    */
   tapMap(e){
     let that = this
@@ -105,17 +111,19 @@ Page({
     query.selectViewport().scrollOffset()
     query.exec(function (res) {
       console.log(res[0].height)
-      that.setData({
-        winHeight: that.data.winHeight-res[0].height
-      })
+      if (that.data.WINHEIGHT ===  that.data.winHeight){
+        that.setData({
+          winHeight: that.data.winHeight - res[0].height
+        })
+      }
     })
   },
   /**
    * 查找路线
    */
   toWay(){
-    wx.redirectTo({
-      url: '../way/way',
+    wx.navigateTo({
+      url: '../search/search',
     })
   },
   /**
@@ -145,15 +153,8 @@ Page({
         that.setData({
           isShow:false
         })
-        // that.setMarks(res.longitude,res.latitude)
-        // that.updateCenterLocation(res.latitude, res.longitude);
-        // that.regeocodingAddress();
-        // that.queryMarkerInfo();
       }
     })
-    // } else { //begin
-    // }
-   
   },
   /**
    * 设置mark点
@@ -173,30 +174,16 @@ Page({
     })
   },
   /**
-   * 路线
-   */
-  getWay(){
-    var that = this;
-    
-    var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
-    myAmapFun.getRegeo({
-      success: (res) => {
-        console.log(res, res[0].regeocodeData.formatted_address)
-        this.setData({
-          address: res[0].regeocodeData.formatted_address
-        })
-        that.getWeather()
-      }
-    })
-  },
-  /**
    * 获取天气
    */
   getWeather(){
+    let that = this
     var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
     myAmapFun.getWeather({
       success: function (data) {
-        console.log(data)
+        that.setData({
+          weather: data.liveData.weather
+        })
       },
       fail: function (info) {
         //失败回调
@@ -213,6 +200,7 @@ Page({
       success: function(res) {
         console.log(res)
         that.setData({
+          WINHEIGHT :res.windowHeight,
           winHeight: res.windowHeight,
           winWidth: res.windowWidth
         })
@@ -261,8 +249,6 @@ Page({
     },100)
     that.setData({
       scale:16,
-      // headimgHeight:60,
-      // headimgWidth:60,
       markers:[]
     })
   },
@@ -286,8 +272,9 @@ Page({
       success(data){
         console.log(data)
         app.globalData.poiList = data.data.regeocode.pois
+        app.globalData.formatted_address = data.data.regeocode.formatted_address
         that.setData({
-          regeocode: data.data.regeocode
+          regeocode: data.data.regeocode.formatted_address
         })
       }
     })
@@ -297,7 +284,50 @@ Page({
    */
   toPoi(){
     wx.navigateTo({
-      url:'../poi/poi'
+      url:`../poi/poi`
+    })
+  },
+  /**
+   * 点击取消
+   */
+  cancle(){
+    this.setData({
+      isShow:true,
+      winHeight : this.data.WINHEIGHT
+    })
+  },
+  /**
+   * 发布
+   */
+  formSubmit(e){
+    let that = this
+    console.log(e.detail.value.msg)
+    if (e.detail.value.msg === ''){
+      wx.showModal({
+        title: '提示',
+        content: '请说两句呗！！！',
+        cancelColor:'',
+        cancelText:'就不',
+        confirmColor:'',
+        confirmText:'好吧',
+        success:function(){
+          that.setData({
+            focus:true
+          })
+        }
+      })
+      return
+    }
+    console.log(this.data.imgsArray)
+    console.log(this.data.regeocode)
+  },
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+    console.log('onShow')
+    this.setData({
+      regeocode: app.globalData.formatted_address
     })
   },
 
@@ -344,13 +374,7 @@ Page({
     
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    console.log('onShow')
-   
-  },
+ 
 
   /**
    * 生命周期函数--监听页面隐藏

@@ -27,7 +27,7 @@ page,.map-content{
   background-color: transparent;
 }
 .search{
-  width: 90%;
+  width: 70%;
   line-height: 80rpx;
   margin:10rpx 0;
   border-radius: 10rpx;
@@ -76,17 +76,21 @@ page,.map-content{
   height: 77%;
 }
 .bottom-button{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: relative
 }
 .button-common{
   line-height: 72rpx;
   padding: 0 28rpx;
   font-weight: 600;
+  background: transparent;
+  display: inline-block;
 }
 .sure{
-  color: green
+  color: green;
+  float: right;
+}
+button::after{
+  border: none;
 }
 .locationImg{
   width: 40rpx;
@@ -120,4 +124,10 @@ page,.map-content{
 .imgBox image{
   height: 240rpx;
   margin:20rpx 1.5%;
+}
+.photo{
+  width:80rpx;
+  height:80rpx;
+  border-radius:100%;
+  margin:0 10rpx;
 }

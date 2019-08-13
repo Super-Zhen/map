@@ -34,6 +34,7 @@ App({
   globalData: {
     userInfo: null,
     requsetUrl:'https://restapi.amap.com/v3/geocode/regeo',
-    poiList:[]
+    poiList:[],
+    formatted_address:''
   }
 })

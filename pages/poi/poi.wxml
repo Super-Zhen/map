@@ -1,7 +1,7 @@
 <!--pages/poi/poi.wxml-->
 <view>
   <block wx:for='{{poiList}}' wx:key="{{item.id}}">
-    <view class="bottom-location" bindtap="backtoMap">
+    <view class="bottom-location" bindtap="backtoMap" data-location="{{item.location}}" data-licationName='{{item.address}}'>
       <image src="../../img/filedicon_location_.png" class='locationImg'></image>
       <text class='locationName'>{{item.address}}</text>
     </view>

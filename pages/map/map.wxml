@@ -1,67 +1,67 @@
 <view class="map-content">
-<view>
-<!--bindregionchange='regionchange'-->
-<map 
-    id="myMap" 
-    show-location 
-    longitude="{{longitude}}"  
-    latitude="{{latitude}}" 
-    enable-traffic="{{enableTraffic}}"
-    scale="{{scale}}"
-    polyline="{{polyline}}"
-    
-    markers="{{markers}}"
-    style="width:{{winWidth}}px;height:{{winHeight}}px">
-    <!--是否开启交通状态-->
-    <cover-view class='enableTraffic flex' bindtap="enableTraffic">
-      <cover-image src="../../img/lukuang.png"></cover-image>
-    </cover-view>
-    <!--头部查找路线-->
-    <cover-view class="flex bgCfff">
-      <cover-view bindtap="tapMap" class='search'>查找地点、路线</cover-view>
-    </cover-view>
-    <!--设置头像 代替control-->
-    <cover-view class='headimg'  style='height:{{headimgHeight}}rpx;width:{{headimgWidth}}rpx' bindtap="getCenterLocation">
-      <cover-image src="{{headImg}}"></cover-image>
-    </cover-view>
-    <!--回到所在位置-->
-    <cover-view class='YourPoint flex' bindtap="getSelfLocation" >
-      <cover-image src="../../img/self-location.png"></cover-image>
-    </cover-view>
-    <!--相机-->
-    <cover-view class='caramel flex' bindtap="getCamera">
-      <cover-image class='carImg' src="../../img/xiangji.png"></cover-image>
-    </cover-view>
-    <!--获取地图中间点的位置-->
-    <cover-view class="flex centerLocation" bindtap="getCenterLocation" wx:if="{{isShow}}">
-      <cover-view>获取当前位置</cover-view>   
-    </cover-view>
-    <cover-view bindtap='getWay'>路线</cover-view>
-  </map>
-</view>
-  
+  <view>
+  <!--bindregionchange='regionchange'-->
+    <map 
+        id="myMap" 
+        show-location 
+        longitude="{{longitude}}"  
+        latitude="{{latitude}}" 
+        enable-traffic="{{enableTraffic}}"
+        scale="{{scale}}"
+        polyline="{{polyline}}"
+        markers="{{markers}}"
+        style="width:{{winWidth}}px;height:{{winHeight}}px">
+        <!--是否开启交通状态-->
+        <cover-view class='enableTraffic flex' bindtap="enableTraffic">
+          <cover-image src="../../img/lukuang.png"></cover-image>
+        </cover-view>
+        <!--头部查找路线-->
+        <cover-view class="flex bgCfff">
+          <cover-image src='{{photo}}' class='photo'></cover-image>
+          <cover-view bindtap="toWay" class='search'>查找地点、路线</cover-view>
+          <cover-view  class='flex photo' style="background:#fff">{{weather}}</cover-view>
+        </cover-view>
+        <!--设置头像 代替control-->
+        <cover-view class='headimg'  style='height:{{headimgHeight}}rpx;width:{{headimgWidth}}rpx' bindtap="getCenterLocation">
+          <cover-image src="{{headImg}}"></cover-image>
+        </cover-view>
+        <!--回到所在位置-->
+        <cover-view class='YourPoint flex' bindtap="getSelfLocation" >
+          <cover-image src="../../img/self-location.png"></cover-image>
+        </cover-view>
+        <!--相机-->
+        <cover-view class='caramel flex' bindtap="getCamera">
+          <cover-image class='carImg' src="../../img/xiangji.png"></cover-image>
+        </cover-view>
+        <!--获取地图中间点的位置-->
+        <cover-view class="flex centerLocation" bindtap="getCenterLocation" wx:if="{{isShow}}">
+          <cover-view>获取当前位置</cover-view>   
+        </cover-view>
+      </map>
+  </view>
   <view id='bottom-view' style="height:600rpx">
-    <view class="bottom-button">
-      <text class='cancle button-common'>取消</text>
-      <text class='sure button-common'>发布</text>
-    </view>
-    <view class="bottom-location" bindtap="toPoi">
-      <image src="../../img/filedicon_location_.png" class='locationImg'></image>
-      <text class='locationName'>{{regeocode.formatted_address}}</text>
-    </view>
-    <view class='flex'>
-      <textarea class="bottom-text" placeholder="你还有啥要说的？" rows="2"></textarea>
-    </view>
-    <view class='flex textInfo' wx:if="{{imgsArray.length==0}}">
-      <text>点击发布上方的相机选择或者拍摄你要上传的照片吧，最多三张哦</text>
-    </view>
-    <view class='imgBox' wx:else style="height:290rpx">
-    
-      <block wx:for="{{imgsArray}}" wx:key="{{item}}">
-        <block wx:for="{{item}}" wx:key="{{item.size}}">
-          <image src="{{item.path}}" mode="aspectFit" ></image>
-        </block>
-      </block> 
-    </view>
+    <form bindsubmit="formSubmit">
+      <view class="bottom-button">
+        <button class='cancle button-common' bindtap="cancle">取消</button>
+        <button class='sure button-common' form-type="submit">发布</button>
+      </view>
+      <view class="bottom-location" bindtap="toPoi">
+        <image src="../../img/filedicon_location_.png" class='locationImg'></image>
+        <text class='locationName'>{{regeocode}}</text>
+      </view>
+      <view class='flex'>
+        <textarea class="bottom-text" focus="{{focus}}" name='msg' placeholder="你还有啥要说的？" rows="2"></textarea>
+      </view>
+      <view class='flex textInfo' wx:if="{{imgsArray.length==0}}">
+        <text>点击发布上方的相机选择或者拍摄你要上传的照片吧，最多三张哦</text>
+      </view>
+      <view class='imgBox' wx:else style="height:290rpx">
+        <block wx:for="{{imgsArray}}" wx:key="{{item}}">
+          <block wx:for="{{item}}" wx:key="{{item.size}}">
+            <image src="{{item.path}}" mode="aspectFit" ></image>
+          </block>
+        </block> 
+      </view>
+    </form>
   </view>
 </view>
