@@ -31,7 +31,6 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    console.log('onLoad')
     that.checkSetting()
     that.getScreenHeight()
     that.mapCtx = wx.createMapContext('myMap')
@@ -106,6 +105,9 @@ Page({
    */
   tapMap(e){
     let that = this
+    that.setData({
+      isShow:false
+    })
     const query = wx.createSelectorQuery()
     query.select('#bottom-view').boundingClientRect()
     query.selectViewport().scrollOffset()
@@ -231,12 +233,6 @@ Page({
         console.log(e) 
       }
     })
-    // let CameraContext = wx.createCameraContext()
-    // CameraContext.takePhoto({
-    //   success(res){
-    //     console.log(res)
-    //   }
-    // })
   },
   /**
    * 获取自身所在的位置
@@ -293,8 +289,9 @@ Page({
   cancle(){
     this.setData({
       isShow:true,
-      winHeight : this.data.WINHEIGHT
+      // winHeight : this.data.WINHEIGHT
     })
+    this.getScreenHeight()
   },
   /**
    * 发布
@@ -320,6 +317,12 @@ Page({
     }
     console.log(this.data.imgsArray)
     console.log(this.data.regeocode)
+    wx.showToast({
+      title: '发布成功',
+      duration: 3000,
+      icon: 'success'
+    })
+    that.cancle()
   },
   /**
    * 生命周期函数--监听页面显示
@@ -330,42 +333,6 @@ Page({
       regeocode: app.globalData.formatted_address
     })
   },
-
-
-
-
-
-
-  translateMarker: function () {
-    this.mapCtx.translateMarker({
-      markerId: 0,
-      autoRotate: true,
-      duration: 1000,
-      destination: {
-        latitude: 23.10229,
-        longitude: 113.3345211,
-      },
-      animationEnd() {
-        console.log('animation end')
-      }
-    })
-  },
-  includePoints: function () {
-    this.mapCtx.includePoints({
-      padding: [10],
-      points: [{
-        latitude: 23.10229,
-        longitude: 113.3345211,
-      }, {
-        latitude: 23.00229,
-        longitude: 113.3345211,
-      }]
-    })
-  },
-
-
-
-
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -373,9 +340,6 @@ Page({
     console.log('onReady')
     
   },
-
- 
-
   /**
    * 生命周期函数--监听页面隐藏
    */

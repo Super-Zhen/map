@@ -3,7 +3,8 @@ const amapWX = require('../../common/amap-wx.js')
 const MapAk = require('../../common/mapKey.js')
 Page({
   data: {
-    markers: [{
+    markers: [
+      {
       // iconPath: "../../img/mapicon_navi_s.png",
       id: 0,
       latitude: 39.989643,
@@ -20,19 +21,64 @@ Page({
     }],
     distance: '',
     cost: '',
-    polyline: []
+    polyline: [],
+    option:'',
+    flag:1
   },
-  onLoad: function () {
+  onLoad: function (option) {
+    this.setData({
+      option: option
+    })
     var that = this;
-    // var key = config.Config.key;
+    // 设置地图上显示两个点
+    that.mapCtx = wx.createMapContext('navi_map')
+    that.mapCtx.includePoints({
+      padding: [50],
+      points: [{
+        latitude: option.start.split(',')[1],
+        longitude: option.start.split(',')[0],
+      }, {
+          latitude: option.end.split(',')[1],
+          longitude: option.end.split(',')[0],
+      }]
+    })
+    that.setData({
+      markers: [{
+        id: 0,
+        latitude: option.start.split(',')[1],
+        longitude: option.start.split(',')[0],
+        width: 23,
+        height: 33
+      }, {
+        id: 0,
+          latitude: option.end.split(',')[1],
+          longitude: option.end.split(',')[0],
+        width: 24,
+        height: 34
+      }]
+    })
+    that.goToCar()
+  },
+  goDetail: function () {
+    wx.navigateTo({
+      url: '../navigation/navigation'
+    })
+  },
+  goToCar: function () {
+    let that = this
+    that.setData({
+      flag:1
+    })
+    let option = that.data.option
     var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
     myAmapFun.getDrivingRoute({
-      origin: '116.481028,39.989643',
-      destination: '116.434446,39.90816',
+      origin: option.end, // end
+      destination: option.start, // start
       success: function (data) {
         var points = [];
         if (data.paths && data.paths[0] && data.paths[0].steps) {
           var steps = data.paths[0].steps;
+          wx.setStorageSync('steps', JSON.stringify(data.paths))
           for (var i = 0; i < steps.length; i++) {
             var poLen = steps[i].polyline.split(';');
             for (var j = 0; j < poLen.length; j++) {
@@ -67,29 +113,54 @@ Page({
       }
     })
   },
-  // goDetail: function () {
-  //   wx.navigateTo({
-  //     url: '../navigation_car_detail/navigation'
-  //   })
-  // },
-  // goToCar: function (e) {
-  //   wx.redirectTo({
-  //     url: '../navigation_car/navigation'
-  //   })
-  // },
-  // goToBus: function (e) {
-  //   wx.redirectTo({
-  //     url: '../navigation_bus/navigation'
-  //   })
-  // },
-  // goToRide: function (e) {
-  //   wx.redirectTo({
-  //     url: '../navigation_ride/navigation'
-  //   })
-  // },
-  // goToWalk: function (e) {
-  //   wx.redirectTo({
-  //     url: '../navigation_walk/navigation'
-  //   })
-  // }
+  goToWalk: function () {
+    var that = this;
+    that.setData({
+      flag: 2
+    })
+    let option = that.data.option
+    // var key = config.Config.key;
+    var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
+    myAmapFun.getWalkingRoute({
+      origin: option.end, // end
+      destination: option.start, // start
+      success: function (data) {
+        var points = [];
+        wx.setStorageSync('steps', JSON.stringify(data.paths))
+        if (data.paths && data.paths[0] && data.paths[0].steps) {
+          var steps = data.paths[0].steps;
+          for (var i = 0; i < steps.length; i++) {
+            var poLen = steps[i].polyline.split(';');
+            for (var j = 0; j < poLen.length; j++) {
+              points.push({
+                longitude: parseFloat(poLen[j].split(',')[0]),
+                latitude: parseFloat(poLen[j].split(',')[1])
+              })
+            }
+          }
+        }
+        that.setData({
+          polyline: [{
+            points: points,
+            color: "#0091ff",
+            width: 6
+          }]
+        });
+        if (data.paths[0] && data.paths[0].distance) {
+          that.setData({
+            distance: data.paths[0].distance + '米'
+          });
+        }
+        if (data.paths[0] && data.paths[0].duration) {
+          that.setData({
+            cost: parseInt(data.paths[0].duration / 60) + '分钟'
+          });
+        }
+
+      },
+      fail: function (info) {
+
+      }
+    })
+  }
 })

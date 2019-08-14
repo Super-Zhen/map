@@ -39,8 +39,8 @@
         </cover-view>
       </map>
   </view>
-  <view id='bottom-view' style="height:600rpx">
-    <form bindsubmit="formSubmit">
+  <view id='bottom-view'>
+    <form bindsubmit="formSubmit"wx:if="{{!isShow}}" >
       <view class="bottom-button">
         <button class='cancle button-common' bindtap="cancle">取消</button>
         <button class='sure button-common' form-type="submit">发布</button>

@@ -3,7 +3,13 @@ const amapWX = require('../../common/amap-wx.js')
 const MapAk = require('../../common/mapKey.js')
 Page({
   data: {
-    tips: {}
+    tips: {}, 
+    startLocation:'',
+    startLocationCode:'',
+    toLocation:'',
+    toLocationCode:'',
+    flag:'',
+
   },
   onLoad: function () {
 
@@ -11,13 +17,11 @@ Page({
   bindInput: function (e) {
     var that = this;
     var keywords = e.detail.value;
-    // var key = config.Config.key;
     var myAmapFun = new amapWX.AMapWX({ key: MapAk.MapAk });
     myAmapFun.getInputtips({
       keywords: keywords,
       location: '',
       success: function (data) {
-        console.log(data)
         if (data && data.tips) {
           that.setData({
             tips: data.tips
@@ -28,11 +32,37 @@ Page({
     })
   },
   bindSearch: function (e) {
-    var keywords = e.target.dataset.keywords;
-    var url = app.globalData.requsetUrl+'/poi/poi?keywords=' + keywords;
-    console.log(url)
-    // wx.redirectTo({
-    //   url: url
-    // })
+    let keywords = e.target.dataset.keywords;
+    let location = e.target.dataset.code;
+    if (this.data.flag===1){
+      this.setData({
+        startLocation: keywords,
+        startLocationCode: location,
+        tips: {}
+      })
+    }else{
+      this.setData({
+        toLocation: keywords,
+        toLocationCode: location,
+        tips: {}
+      })
+    }
+  }, 
+  setFlag(e){
+    console.log(e.currentTarget.dataset.id)
+    if (e.currentTarget.dataset.id === '1'){
+      this.setData({
+        flag:1
+      })
+    }else{
+      this.setData({
+        flag:2
+      })
+    }
+  },
+  getWays(){
+    wx.navigateTo({
+      url: `../way/way?start=${this.data.startLocationCode}&end=${this.data.toLocationCode}`,
+    })
   }
 })

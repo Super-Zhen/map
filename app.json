@@ -5,7 +5,8 @@
     "pages/map/map",
     "pages/way/way",
     "pages/poi/poi",
-    "pages/search/search"
+    "pages/search/search",
+    "pages/navigation/navigation"
   ],
   "permission": {
     "scope.userLocation": {

@@ -1,6 +1,14 @@
-<view class="section">
-  <input bindinput="bindInput" placeholder="搜索" focus="true" />
+<view class="content">
+  <view style="flex:1">
+    <view class="section">
+      <input bindinput="bindInput" data-id='1' data-local="{{startLocationCode}}" bindfocus="setFlag" placeholder="出发位置" focus="true" value="{{startLocation}}"/>
+    </view>
+    <view class="section">
+      <input bindinput="bindInput" data-id='2' data-local="{{toLocationCode}}" bindfocus="setFlag" placeholder="到达位置" value="{{toLocation}}"/>
+    </view>
+  </view>
+  <button class="searchBtn" bindtap="getWays">搜索</button>
 </view>
-<view bindtouchstart="bindSearch" data-keywords="{{i.name}}" class="text_box" wx:for="{{tips}}" wx:key="{{item}}" wx:for-item="i">
-  {{i.name}}
-</view>
+ <view bindtouchstart="bindSearch" data-keywords="{{i.name}}" data-code="{{i.location}}" class="text_box" wx:for="{{tips}}" wx:key="{{item}}" wx:for-item="i">
+    {{i.name}}
+  </view> 

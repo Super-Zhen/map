@@ -114,7 +114,7 @@ button::after{
   padding:10rpx;
 }
 .textInfo{
-  padding: 40rpx;
+  padding: 86rpx 40rpx;
   line-height: 60rpx;
   text-align: center;
 }

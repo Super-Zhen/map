@@ -8,3 +8,8 @@
   padding: 200rpx 0;
   box-sizing: border-box;
 } 
+.info{
+  margin: 0 24rpx;
+  padding:24rpx 0;
+  border-bottom: 1rpx solid #efefef;
+}
