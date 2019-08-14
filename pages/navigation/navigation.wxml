@@ -1,0 +1,6 @@
+<!--pages/navigation_car_detai/navigation.wxml-->
+<view>
+  <block wx:for="{{stepsList}}" wx:key="{{item.tolls}}">
+    <view class='info'>{{item.instruction}}</view>
+  </block>
+</view>
